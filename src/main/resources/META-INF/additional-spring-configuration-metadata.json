@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret used to sign JWT tokens."
+    },
+    {
+      "name": "bot.token",
+      "type": "java.lang.String",
+      "description": "Telegram bot token."
+    }
+  ]
+}
