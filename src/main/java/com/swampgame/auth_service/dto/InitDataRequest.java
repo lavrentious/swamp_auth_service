@@ -6,11 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.validation.constraints.NotBlank;
 
 public class InitDataRequest {
   @NotBlank
   private String data;
+  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   public Map<String, String> getParams() {
     Map<String, String> params = new LinkedHashMap<>();
@@ -42,6 +45,19 @@ public class InitDataRequest {
       }
     }
     return sb.toString();
+  }
+
+  public TelegramUserDto getUser() {
+    Map<String, String> params = getParams();
+    String userJson = params.get("user");
+    if (userJson == null || userJson.isBlank()) {
+      return null;
+    }
+    try {
+      return MAPPER.readValue(userJson, TelegramUserDto.class);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to parse Telegram user JSON", e);
+    }
   }
 
   public String getData() {
