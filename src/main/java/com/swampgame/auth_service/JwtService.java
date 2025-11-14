@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swampgame.auth_service.dto.JwtPayload;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -61,4 +63,21 @@ public class JwtService {
 
     return mapper.convertValue(claims, JwtPayload.class);
   }
+
+  public boolean validate(String token) {
+    try {
+      Jwts.parser()
+          .verifyWith(key)
+          .build()
+          .parseSignedClaims(token);
+      return true;
+    } catch (ExpiredJwtException e) {
+      throw new RuntimeException("JWT expired", e);
+    } catch (JwtException e) {
+      throw new RuntimeException("Invalid JWT", e);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to parse JWT", e);
+    }
+  }
+
 }
