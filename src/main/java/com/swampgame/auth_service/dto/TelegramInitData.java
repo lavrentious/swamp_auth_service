@@ -13,10 +13,8 @@ public class TelegramInitData {
   private String start_param;
   private Integer can_send_after;
 
-  // Required in Python spec
   private String auth_date;
   private String hash;
 
-  // Optional, used for 3rd-party mode
   private String signature;
 }

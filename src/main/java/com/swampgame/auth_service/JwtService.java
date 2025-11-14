@@ -26,7 +26,7 @@ public class JwtService {
   private final SecretKey key;
   private final ObjectMapper mapper = new ObjectMapper();
 
-  public JwtService(@Value("${jwt.secret}") String secret) { // FIXME: secret key
+  public JwtService(@Value("${jwt.secret}") String secret) {
     System.err.println("USING SECRET KEY: " + secret);
     byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
     this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -34,19 +34,17 @@ public class JwtService {
 
   public String issue(JwtPayload payload) {
     try {
-      // Convert payload to map
       @SuppressWarnings("unchecked")
       Map<String, Object> customClaims = mapper.convertValue(payload, Map.class);
 
-      // Create a new map that includes standard JWT claims
       Map<String, Object> allClaims = new HashMap<>(customClaims);
 
       long now = System.currentTimeMillis();
       allClaims.put(Claims.ISSUED_AT, new Date(now));
-      allClaims.put(Claims.EXPIRATION, new Date(now + 3600_000)); // 1 hour
+      allClaims.put(Claims.EXPIRATION, new Date(now + 60 * 60 * 1000)); // 1hr ; in milliseconds
 
       return Jwts.builder()
-          .claims(allClaims) // <-- This is the 0.13.0-compatible way
+          .claims(allClaims)
           .signWith(key, Jwts.SIG.HS256)
           .compact();
     } catch (Exception e) {

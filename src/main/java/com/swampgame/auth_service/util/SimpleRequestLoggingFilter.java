@@ -25,7 +25,6 @@ public class SimpleRequestLoggingFilter extends OncePerRequestFilter {
 
     logger.info("Incoming request: " + method + " " + uri);
 
-    // Optional: log headers
     Enumeration<String> headerNames = request.getHeaderNames();
     while (headerNames.hasMoreElements()) {
       String header = headerNames.nextElement();
