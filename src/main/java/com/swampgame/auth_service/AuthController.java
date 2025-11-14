@@ -59,13 +59,13 @@ public class AuthController {
 
   // validate jwt
   @PostMapping({ "/validate", "/validate/" })
-  public String validateJwt(@RequestBody String jwt) {
+  public ResponseEntity<?> validateJwt(@RequestBody String jwt) {
     try {
       this.jwtService.validate(jwt);
     } catch (Exception e) {
-      return e.getMessage();
+      return ResponseEntity.status(401).body(e.getMessage());
     }
-    return "OK";
+    return ResponseEntity.ok("OK");
   }
 
 }
